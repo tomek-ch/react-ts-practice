@@ -1,24 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import AddForm from './AddForm';
+import ItemsList from './ItemsList';
+
+export interface ToDoItem {
+  id: number;
+  text: string;
+  time: number;
+  done: boolean;
+}
 
 function App() {
+  const [ toDoList, setToDoList ] = useState<ToDoItem[]>(JSON.parse(localStorage.getItem('list') || '[]'));
+
+  useEffect(() => {
+    setToDoList(prev => prev);
+    localStorage.setItem('list', JSON.stringify(toDoList));
+  }, [toDoList]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <AddForm
+        setToDoList={setToDoList}
+      />
+      <ItemsList items={toDoList} setItems={setToDoList} />
     </div>
   );
 }
